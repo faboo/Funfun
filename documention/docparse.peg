@@ -1,0 +1,81 @@
+{
+	fn = require('../fn')
+	function s(name, text, offset){
+		/*
+		var out = name
+		if(offset !== undefined)
+			out = out + ' ' + offset
+		if(text !== undefined)
+			out = out + ': ' + JSON.stringify(text)
+		console.log(out)
+		*/
+	}
+}
+
+start = spacen intro:(comment?) spacen funcs:exprs { return {intro: intro, funcs: funcs} }
+
+space = [ \t]
+spacen = [ \t\n]*
+endl = [\n;]+ / (&'{')
+string
+	= "'" ([^'] / "\\'")* "'" { s('sgl str', text()) }
+	/ '"' ([^"] / '\\"')* '"' { s('dbl str', text()) }
+linec = string / [^{}\n;]
+
+exprs = exprs:(expr*) spacen { return exprs.flatten() }
+
+expr
+	= space* fun:func { s('func',text()); return [fun] }
+	/ '{' rets:exprs '}' { s('block',text()); return rets }
+	/ doc:comment { s('bare comment',text());return doc.match(/\s*section: /)? [{comment: doc}] : [] }
+	/ statement { s('bare statement',text()); return [] }
+
+statement
+	= linec* ('\n'/';') { s('statement', text(), line());return text() }
+	/ linec* (&'{') { s('flow', text(), line());return text() }
+	/ linec+ (&'}') { s('endflow', text(), line());return text() }
+
+comment
+	= docs:(linecomment+) { return docs.join('\n') }
+	/ space* "/*" doc:(([^*]+ / [*][^/])*) "*/" spacen { return doc.flatten().join('') }
+
+linecomment = space* "//" doc:([^\n]*) '\n' { return doc.join('') }
+
+id = idc (idc / [0-9])* { return text() }
+idc = [a-zA-Z$_] // this is a bit limited
+
+func =
+		doc:comment
+
+		name:funchead spacen
+
+		ps:params spacen
+
+		rets:block
+
+		{ s('func');return { doc: doc, name: name, params: ps, returns: rets } }
+
+funchead = "function" space name:id { s('funchead');return name }
+
+params =  "(" ps:(param*) ")" { s('params');return ps }
+
+param =
+		spacen
+		doc:(comment?) spacen
+		name:id spacen
+		("," / &")" )
+		{ s('param');return { doc: doc, name: name } }
+
+block =
+	"{" spacen rets:(returndoc*) spacen "}"
+	{ s('block');return rets.flatten().filter(fn.id) }
+
+returndoc
+	= doc:comment return { s('doc comment');return doc }
+	/ return { s('bare return');return null }
+	/ comment { s('inner comment');return null }
+	/ rets:block { s('inner block');return rets }
+	/ statement { s('inner statement', text(), line());return null }
+
+return
+	= space* "return" (space linec*)? (endl/(&"}"))

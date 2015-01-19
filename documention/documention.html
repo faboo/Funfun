@@ -1,0 +1,1515 @@
+<!doctype html>
+<html><head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="documention.css"><title>fn.js Documention</title></head>
+<body>
+<nav>
+<ol>
+<li>
+<h3>
+ Functions</h3>
+</li>
+
+<li>
+<a href="#asNew">asNew</a></li>
+
+<li>
+<a href="#compose">compose</a></li>
+
+<li>
+<a href="#curry">curry</a></li>
+
+<li>
+<a href="#flip">flip</a></li>
+
+<li>
+<a href="#transform">transform</a></li>
+
+<li>
+<h3>
+ Arrays</h3>
+</li>
+
+<li>
+<a href="#cons">cons</a></li>
+
+<li>
+<a href="#contains">contains</a></li>
+
+<li>
+<a href="#del">del</a></li>
+
+<li>
+<a href="#delBy">delBy</a></li>
+
+<li>
+<a href="#flatten">flatten</a></li>
+
+<li>
+<a href="#group">group</a></li>
+
+<li>
+<a href="#head">head</a></li>
+
+<li>
+<a href="#init">init</a></li>
+
+<li>
+<a href="#last">last</a></li>
+
+<li>
+<a href="#pluck">pluck</a></li>
+
+<li>
+<a href="#reject">reject</a></li>
+
+<li>
+<a href="#repeat">repeat</a></li>
+
+<li>
+<a href="#reverse">reverse</a></li>
+
+<li>
+<a href="#tail">tail</a></li>
+
+<li>
+<a href="#take">take</a></li>
+
+<li>
+<a href="#union">union</a></li>
+
+<li>
+<a href="#uniq">uniq</a></li>
+
+<li>
+<a href="#uniqBy">uniqBy</a></li>
+
+<li>
+<h3>
+ Objects</h3>
+</li>
+
+<li>
+<a href="#assign">assign</a></li>
+
+<li>
+<a href="#filterValues">filterValues</a></li>
+
+<li>
+<a href="#forIn">forIn</a></li>
+
+<li>
+<a href="#has">has</a></li>
+
+<li>
+<a href="#is">is</a></li>
+
+<li>
+<a href="#mapValues">mapValues</a></li>
+
+<li>
+<a href="#omit">omit</a></li>
+
+<li>
+<a href="#pairs">pairs</a></li>
+
+<li>
+<a href="#pick">pick</a></li>
+
+<li>
+<a href="#prop">prop</a></li>
+
+<li>
+<a href="#values">values</a></li>
+
+<li>
+<h3>
+ Util</h3>
+</li>
+
+<li>
+<a href="#add">add</a></li>
+
+<li>
+<a href="#and">and</a></li>
+
+<li>
+<a href="#constant">constant</a></li>
+
+<li>
+<a href="#equal">equal</a></li>
+
+<li>
+<a href="#greater">greater</a></li>
+
+<li>
+<a href="#id">id</a></li>
+
+<li>
+<a href="#isNumber">isNumber</a></li>
+
+<li>
+<a href="#less">less</a></li>
+
+<li>
+<a href="#not">not</a></li>
+
+<li>
+<a href="#or">or</a></li>
+
+<li>
+<a href="#random">random</a></li>
+
+<li>
+<a href="#toArray">toArray</a></li>
+</ol>
+</nav>
+<article>
+<h1>fn.js</h1>
+<span>Funfun is far from complete. I&#39;ll be adding more operations and utility
+functions as I use it, but pull requests are welcome!</span>
+<section>
+<h2 id="curry">curry ( func, useThis )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+func</span>
+<span class="doc">
+<span>The function to curry.</span>
+</span>
+</li>
+<li class="param">
+<span class="name">
+useThis</span>
+<span class="doc">
+<span>An optional value to use as <code>this</code> when calling the function.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>The fully curried version of <code>func</code>.</span>
+</div>
+
+<span>Curries the provided function. The resultant function can be called on
+any number of number of arguments, either calling the original function
+if enough arguments have been provided, or returning a new curried
+function that accepts the rest of the arguments.</span>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span><span class="hljs-params">(a, b, c, d)</span></span>{
+    <span class="hljs-keyword">return</span> a + b + c + d
+}
+
+addOne = fn.curry(add)(<span class="hljs-number">3</span>)
+<span class="hljs-comment">// -&gt; function(b, c, d) { .... }</span>
+addSome = add(<span class="hljs-number">7</span>, <span class="hljs-number">5</span>)
+<span class="hljs-comment">// -&gt; function(d) { ... }</span>
+addSome(<span class="hljs-number">2</span>)
+<span class="hljs-comment">// -&gt; 17</span>
+</code></pre><p>The property <code>curry</code> is available on Functions which returns a curried
+version of the function. This new function is cached so subsequent uses
+of the property always return the same function.</p>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span><span class="hljs-params">(a, b)</span>
+
+<span class="hljs-title">curriedAdd</span> = <span class="hljs-title">add</span>.<span class="hljs-title">curry</span>
+<span class="hljs-title">plusOne</span> = <span class="hljs-title">curriedAdd</span><span class="hljs-params">(1)</span></span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="compose">compose (  )</h2>
+<div class="return">
+<h3>Returns</h3>
+<span>A function that is the composition of the provided functions.</span>
+</div>
+
+<span>Compose one or more functions. Returns a new function that is the
+composition of the passed functions. The resultant function is itself
+curried.</span>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">plusOne</span><span class="hljs-params">(num)</span></span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + num
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">timesTen</span><span class="hljs-params">(num)</span></span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-number">10</span> * num
+}
+
+fn.compose(plusOne, timesTime)(<span class="hljs-number">2</span>)
+<span class="hljs-comment">// -&gt; 21</span>
+</code></pre><p>The fn object is actually an alias for fn.compose.</p>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">plusOne</span><span class="hljs-params">(num)</span></span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + num
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">timesTen</span><span class="hljs-params">(num)</span></span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-number">10</span> * num
+}
+
+fn(plusOne, timesTime)(<span class="hljs-number">2</span>)
+<span class="hljs-comment">// -&gt; 21</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="transform">transform ( func )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+func</span>
+<span class="doc">
+<span>The function whose arguments are to be transformed.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>A new function that transforms its arguments before calling <code>func</code>
+on them.</span>
+</div>
+
+<span>Provide transformations for the arguments of a function. transform()
+takes a function and additional functions to act as transformers for that
+functions respective parameters.</span>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span><span class="hljs-params">(a, b)</span></span>{
+    <span class="hljs-keyword">return</span> a + b
+}
+
+addStrings = fn.trans(add, <span class="hljs-built_in">parseInt</span>, <span class="hljs-built_in">parseInt</span>)
+<span class="hljs-comment">// -&gt; function (a, b) { ... }</span>
+addStrings(<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>)
+<span class="hljs-comment">// -&gt; 3</span>
+</code></pre><p>The property <code>trans</code> is available on Functions that is an alias to
+fn.trans.</p>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span><span class="hljs-params">(a, b)</span></span>{
+    <span class="hljs-keyword">return</span> a + b
+}
+
+addStrings = add.trans(<span class="hljs-built_in">parseInt</span>, <span class="hljs-built_in">parseInt</span>)
+<span class="hljs-comment">// -&gt; function (a, b) { ... }</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="flip">flip ( func, useThis )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+func</span>
+<span class="doc">
+<span>The function to flip.</span>
+</span>
+</li>
+<li class="param">
+<span class="name">
+useThis</span>
+<span class="doc">
+<span>A this parameter to use when calling <code>func</code>. Optional.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>A new function that, when called, calls the original function with
+its arguments in reverse order. When called with more arguments than
+the original function expects, the extra arguments are ignored.</span>
+</div>
+
+<span>Reverses the order of parameters to a function.</span>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">subtract</span><span class="hljs-params">(a, b, c)</span></span>{
+    <span class="hljs-keyword">return</span> a - b - c
+}
+
+subtract(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)
+<span class="hljs-comment">// -&gt; 2</span>
+fn.flip(subtract)(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)
+<span class="hljs-comment">// -&gt; -6</span>
+fn.flip(subtract)(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">10</span>)
+<span class="hljs-comment">// -&gt; -6</span>
+</code></pre><p>The property <code>flip</code> is available on Functions that returns a flipped
+version of the function. This new function is cached so subsequent uses
+of the property always return the same function.</p>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">subtract</span><span class="hljs-params">(a, b, c)</span></span>{
+    <span class="hljs-keyword">return</span> a - b - c
+}
+
+subtract(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)
+<span class="hljs-comment">// -&gt; 2</span>
+subtract.flip(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)
+<span class="hljs-comment">// -&gt; -6</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="asNew">asNew ( func )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+func</span>
+<span class="doc">
+<span>The constructor to use when creating an object.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>Returns a function that, when called, creates a new object based on
+<code>func</code>&#39;s prototype, and calls <code>func</code> with <code>this</code> as the new object,
+passing through any arguments.</span>
+</div>
+
+<span>Create a function that will create a new object based on a constructor
+function, similar to the &#39;new&#39; keyword.</span>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span><span class="hljs-params">(name)</span></span>{
+    <span class="hljs-keyword">this</span>.name = name
+}
+
+<span class="hljs-keyword">var</span> newFoo = fn.new(Foo)
+
+<span class="hljs-keyword">var</span> foo = newFoo(<span class="hljs-string">'Harry'</span>)
+foo.name
+<span class="hljs-comment">// -&gt; 'Harry'</span>
+foo <span class="hljs-keyword">instanceof</span> Foo
+<span class="hljs-comment">// -&gt; true</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="group">group ( func, array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+func</span>
+<span class="doc">
+<span>Function to determine the key to group by.</span>
+</span>
+</li>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+<span>The array to act upon.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>Returns a new object containing the elements of the array, grouped
+together using the provided function to determine the key.</span>
+</div>
+
+<span>Group together the elements of an array.</span>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">oddEven</span><span class="hljs-params">(num)</span></span>{
+    <span class="hljs-keyword">return</span> num % <span class="hljs-number">2</span>? <span class="hljs-string">'even'</span> : <span class="hljs-string">'odd'</span>
+}
+<span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
+
+fn.group(oddEven, array)
+<span class="hljs-comment">// -&gt; { 'even': [2, 4], 'odd': [1, 3, 5] }</span>
+</code></pre><p>The property <code>group</code> is provided on Arrays and is an alias to fn.group.</p>
+<p>Example:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">oddEven</span><span class="hljs-params">(num)</span></span>{
+    <span class="hljs-keyword">return</span> num % <span class="hljs-number">2</span>? <span class="hljs-string">'even'</span> : <span class="hljs-string">'odd'</span>
+}
+
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>].group(oddEven, array)
+<span class="hljs-comment">// -&gt; { 'even': [2, 4], 'odd': [1, 3, 5] }</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="cons">cons ( value, array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+value</span>
+<span class="doc">
+<span>The value to prepend.</span>
+</span>
+</li>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+<span>The array to act upon.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>A new array whose elements are the provided value, followed by the
+elements of the provided array.</span>
+</div>
+
+<span>Add a value to the begining of array non-destructively.</span>
+<p>Example:</p>
+<pre><code>fn.cons(<span class="hljs-number">1</span>, [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>])
+<span class="hljs-comment">// -&gt; [1, 2, 3, 4, 5]</span>
+</code></pre><p>The property <code>cons</code> is provided on Arrays and is an alias to fn.cons.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>].cons(<span class="hljs-number">1</span>)
+<span class="hljs-comment">// -&gt; [1, 2, 3, 4, 5]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="pluck">pluck ( key, array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+key</span>
+<span class="doc">
+<span>The name of the property to isolate.</span>
+</span>
+</li>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+<span>The array to act upon.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>An array of the &#39;plucked&#39; properties.</span>
+</div>
+
+<span>Returns a new array with the values of a particular property of each of
+the elements in an array.</span>
+<p>Example:</p>
+<pre><code>fn.pluck(<span class="hljs-string">'a'</span>, [{a: <span class="hljs-number">1</span>}, {a: <span class="hljs-number">2</span>}])
+<span class="hljs-comment">// -&gt; [1, 2]</span>
+</code></pre><p>The property <code>pluck</code> is provided on Arrays and is an alias to fn.pluck.</p>
+<p>Example:</p>
+<pre><code>[{a: <span class="hljs-number">1</span>}, {a: <span class="hljs-number">2</span>}].pluck(<span class="hljs-string">'a'</span>)
+<span class="hljs-comment">// -&gt; [1, 2]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="reverse">reverse ( array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+<span>The array to reverse.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>Returns a new array with the elements of the original but in the
+opposite order.</span>
+</div>
+
+<span>Reverse the elements of an array. This is similar to
+Array.prototype.reverse, but non-destructive.</span>
+<p>Example:</p>
+<pre><code>fn.reverse([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>,])
+<span class="hljs-comment">// -&gt; [3, 2, 1]</span>
+</code></pre><p><strong>NOTE</strong>: This does <em>not</em> replace the built-in, reverse-in-place
+<code>Array.prototype.reverse</code>!</p>
+</section>
+
+<hr>
+<section>
+<h2 id="head">head ( array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+<span>The array to pull from.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>The first element of <code>array</code>.</span>
+</div>
+
+<span>Returns the first value in the array.</span>
+<p>Example:</p>
+<pre><code>fn.head([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])
+<span class="hljs-comment">// -&gt; 1</span>
+</code></pre><p>The property <code>head</code> is provided on Arrays and is an alias to fn.head.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].head()
+<span class="hljs-comment">// -&gt; [1]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="tail">tail ( array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+<span>The array pull from.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>The last element of <code>array</code>.</span>
+</div>
+
+<span>Returns a new array containing the elements of the specified array except
+the first.</span>
+<p>Example:</p>
+<pre><code>fn.tail([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])
+<span class="hljs-comment">// -&gt; [2, 3]</span>
+</code></pre><p>The property <code>tail</code> is provided on Arrays and is an alias to fn.tail.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].tail()
+<span class="hljs-comment">// -&gt; [2, 3]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="init">init ( array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+<span>The array to retrieve elements from.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>The elements of <code>array</code>, except the last one.</span>
+</div>
+
+<span>Returns a new array containing the elements of the specified array except
+the last (i.e. the opposite of fn.tail).</span>
+<p>Example:</p>
+<pre><code>fn.init([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])
+<span class="hljs-comment">// -&gt; [1, 2]</span>
+</code></pre><p>The property &#39;init&#39; is provided on Arrays and is an alias to fn.init.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].init()
+<span class="hljs-comment">// -&gt; [1, 2]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="last">last ( array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+<span>The array to pull from.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>The final element in <code>array</code>.</span>
+</div>
+
+<span>Returns the last value in the array.</span>
+<p>Example:</p>
+<pre><code>fn.last([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])
+<span class="hljs-comment">// -&gt; 3</span>
+</code></pre><p>The property &#39;last&#39; is provided on Arrays and is an alias to fn.last.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].last()
+<span class="hljs-comment">// -&gt; [3]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="take">take ( amount, array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+amount</span>
+<span class="doc">
+<span>Number of elements to take.</span>
+</span>
+</li>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+<span>The array to pull from.</span>
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>A new array containing the first <code>amount</code> elements of the
+specified array.</span>
+</div>
+
+<span>Get the first several elements of an array.</span>
+<p>Example:</p>
+<pre><code>fn.take(<span class="hljs-number">2</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>])
+<span class="hljs-comment">// -&gt; [1, 2]</span>
+</code></pre><p>The property &#39;take&#39; is provided on Arrays and is an alias to fn.take.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>].take(<span class="hljs-number">2</span>)
+<span class="hljs-comment">// -&gt; [1, 2]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="uniq">uniq ( array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Get only the unique elements of an array. Uniqueness is determined by a
+strict (===) equality comparison.</span>
+<p>Example:</p>
+<pre><code>fn.uniq([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>])
+<span class="hljs-comment">// -&gt; [1, 2, 4]</span>
+</code></pre><p>The property &#39;uniq&#39; is provided on Arrays and is an alias to fn.uniq.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>].uniq()
+<span class="hljs-comment">// -&gt; [1, 2, 4]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="uniqBy">uniqBy ( get, array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+get</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Get only the unique elements of an array. Uniqueness is determined by 
+first calling the provided &#39;get&#39; function on the array elements and then
+by strict (===) equality comparison of the results.</span>
+<p>Example:</p>
+<pre><code>fn.uniqBy(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> </span>{ <span class="hljs-keyword">return</span> i.a }, [{a: <span class="hljs-number">1</span>}, {a: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">4</span>}])
+<span class="hljs-comment">// -&gt; [{a: 1}, {a: 2}, {a: 4}]</span>
+</code></pre><p>The property &#39;uniqBy&#39; is provided on Arrays and is an alias to fn.uniqBy.</p>
+<p>Example:</p>
+<pre><code>[{a: <span class="hljs-number">1</span>}, {a: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">4</span>}].uniqBy(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> </span>{ <span class="hljs-keyword">return</span> i.a })
+<span class="hljs-comment">// -&gt; [{a: 1}, {a: 2}, {a: 4}]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="del">del ( value, array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+value</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Remove a value from an array. Returns a new array with the first matching
+value, based on strict (===) equality, excluded.</span>
+<p>Example:</p>
+<pre><code>fn.del(<span class="hljs-number">4</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>])
+<span class="hljs-comment">// -&gt; [1, 2, 2]</span>
+fn.del(<span class="hljs-number">2</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>])
+<span class="hljs-comment">// -&gt; [1, 2, 4]</span>
+fn.del(<span class="hljs-number">5</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>])
+<span class="hljs-comment">// -&gt; [1, 2, 2, 4]</span>
+</code></pre><p>The property &#39;del&#39; is provided on Arrays and is an alias to fn.del.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>].del(<span class="hljs-number">2</span>)
+<span class="hljs-comment">// -&gt; [1, 2, 4]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="delBy">delBy ( get, array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+get</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Remove value passing a test from an array. Returns a new array with the
+first for which the provided function returns truthy excluded.</span>
+<p>Example:</p>
+<pre><code>fn.delBy(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> </span>{ <span class="hljs-keyword">return</span> i%<span class="hljs-number">2</span> }, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>])
+<span class="hljs-comment">// -&gt; [1, 2, 4]</span>
+</code></pre><p>The property &#39;delBy&#39; is provided on Arrays and is an alias to fn.delBy.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>].del(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> </span>{ <span class="hljs-keyword">return</span> i%<span class="hljs-number">2</span> })
+<span class="hljs-comment">// -&gt; [1, 2, 4]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="union">union ( left, right )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+left</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+right</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<div class="return">
+<h3>Returns</h3>
+<span>this is slower than hand-rolling</span>
+</div>
+
+<span>The set-wise union of two arrays. Returns a new array that contains all
+of the elements that are unique between the two arrays. The order of the
+elements in the new array is not gauranteed.</span>
+<p>Example:</p>
+<pre><code>fn.union([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">5</span>, <span class="hljs-number">3</span>])
+<span class="hljs-comment">// -&gt; [1, 2, 4, 5, 3]</span>
+</code></pre><p>The property &#39;union&#39; is provided on Arrays and is an alias to fn.union.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>].union([<span class="hljs-number">1</span>, <span class="hljs-number">5</span>, <span class="hljs-number">3</span>])
+<span class="hljs-comment">// -&gt; [1, 2, 4, 5, 3]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="flatten">flatten ( array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Flattens an array one level deep. Returns a new array, with elements that
+are themselves arrays interpolated into the new array. Value elements are
+included as-is.</span>
+<p>Example:</p>
+<pre><code>fn.flatten([[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>], <span class="hljs-number">3</span>, [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>]])
+<span class="hljs-comment">// -&gt; [1, 2, 3, 4, 5]</span>
+fn.flatten([[<span class="hljs-number">1</span>, [<span class="hljs-number">2</span>]], <span class="hljs-number">3</span>])
+<span class="hljs-comment">// -&gt; [1, [2], 3]</span>
+</code></pre><p>The property &#39;flatten&#39; is provided on Arrays and is an alias to
+fn.flatten.</p>
+<p>Example:</p>
+<pre><code>[[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>], <span class="hljs-number">3</span>, [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>]].flatten()
+<span class="hljs-comment">// -&gt; [1, 2, 3, 4, 5]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="reject">reject ( func, array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+func</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>The opposite of Array.prototype.filter: remove elements from array that
+pass a test. Returns a new array with the elements of the original array
+except those for which the provided function returns truthy.</span>
+<p>Example:</p>
+<pre><code>fn.reject(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> </span>{ <span class="hljs-keyword">return</span> i % <span class="hljs-number">2</span> }, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>])
+<span class="hljs-comment">// -&gt; [1, 3]</span>
+</code></pre><p>The property &#39;reject&#39; is provided on Arrays and is an alias to fn.reject.</p>
+<p>Example:</p>
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>].reject(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> </span>{ <span class="hljs-keyword">return</span> i % <span class="hljs-number">2</span> })
+<span class="hljs-comment">// -&gt; [1, 3]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="repeat">repeat ( times, value )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+times</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+value</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Create an array consisting of a value repeated a number of times.</span>
+<p>Example:</p>
+<pre><code>fn.repeat(<span class="hljs-string">'foo'</span>, <span class="hljs-number">3</span>)
+<span class="hljs-comment">// -&gt; ['foo', 'foo', 'foo']</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="contains">contains ( elm, array )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+elm</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+array</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Determine whether a value is present in an array. Returns true if the
+value is an element of the array.</span>
+<p>Example:</p>
+<pre><code>fn.contains(<span class="hljs-number">3</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])
+<span class="hljs-comment">// -&gt; true</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="values">values ( object )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+object</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Get the values of all the properties of an object, i.e the opposite of
+Object.keys. Returns a new array containing the value of each
+(enumerable) property of the object. The order of the array is not
+gauranteed.</span>
+<p>Example:</p>
+<pre><code>fn.values({a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>})
+<span class="hljs-comment">// -&gt; [1, 2]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="prop">prop ( key, object )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+key</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+object</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Get the value of a property, of an object. Returns the value of the
+property with that name from the object. If the property is an array, it
+is treated as a path to the value, retrieving each object in turn,
+returning the final value.</span>
+<p>Example:</p>
+<pre><code>fn.prop(<span class="hljs-string">'a'</span>, {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>, c: <span class="hljs-number">3</span>})
+<span class="hljs-comment">// -&gt; 1</span>
+
+fn.prop([<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>], {a: {b: <span class="hljs-number">2</span>}, c: <span class="hljs-number">3</span>})
+<span class="hljs-comment">// -&gt; 2</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="pairs">pairs ( object )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+object</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Get the properties of an object as key/value pairs. Returns a new array
+with elements for each (enumerable) property in the object. Each property
+is represented as a two element array whose elements are the key of
+property and the value of the property.</span>
+<p>Example:</p>
+<pre><code>fn.pairs({a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>})
+<span class="hljs-comment">// -&gt; [['a', 1], ['b', 2]]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="is">is ( type, object )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+type</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+object</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Determine whether an object is an instance of a type.</span>
+<p>Example:</p>
+<pre><code>fn.is(<span class="hljs-built_in">Function</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{ })
+<span class="hljs-comment">// -&gt; true</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="assign">assign ( obj, proto )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+obj</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+proto</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Copies properties from one object to another. Returns first object, which
+is updated (in place) with the properties on the second, over-writing
+those properties in the first object if they already exist.</span>
+<p>Example:</p>
+<pre><code><span class="hljs-keyword">var</span> obj = {a: <span class="hljs-number">1</span>}
+fn.assign(obj, {b: <span class="hljs-number">2</span>})
+<span class="hljs-comment">// -&gt; {a: 1, b: 2}</span>
+obj.b
+<span class="hljs-comment">// -&gt; 2</span>
+
+<span class="hljs-keyword">var</span> obj = {a: <span class="hljs-number">1</span>}
+fn.assign(obj, {a: <span class="hljs-number">3</span>, b: <span class="hljs-number">2</span>})
+<span class="hljs-comment">// -&gt; {a: 3, b: 2}</span>
+obj.a
+<span class="hljs-comment">// -&gt; 3</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="has">has ( template, object )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+template</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+object</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Determine whether an object has properties as defined by a template
+object. Returns true if the object matches the template. Property values
+are compared using strict equality (===).</span>
+<p>Example:</p>
+<pre><code>fn.has({a: <span class="hljs-number">1</span>}, {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>})
+<span class="hljs-comment">// -&gt; true</span>
+fn.has({a: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>})
+<span class="hljs-comment">// -&gt; false</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="pick">pick ( keys, object )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+keys</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+object</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Get the values of a set of properties of an object. Returns a new array
+whose elements are the values of the properties named in the array.</span>
+<p>Example:</p>
+<pre><code>fn.prop([<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>], {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>, c: <span class="hljs-number">3</span>})
+<span class="hljs-comment">// -&gt; [1, 2]</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="forIn">forIn ( func, object )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+func</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+object</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Like Array.prototype.forEach, call a function for each property on an
+object. The Function is called with the property value, key, and then the
+object itself as arguments.</span>
+<p>Example:</p>
+<pre><code>fn.forIn(
+    <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value, key, obj)</span></span>{
+        <span class="hljs-built_in">console</span>.log(key+<span class="hljs-string">': '</span>+value)
+    },
+    {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>})
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="mapValues">mapValues ( func, object )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+func</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+object</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Similar to Array.prototype.map, map a function over the values of an
+object.  Returns a new object whose properties are those of the original
+object where the property values have been passed through the provided
+function.</span>
+<p>Example:</p>
+<pre><code>fn.mapValues(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(i)</span></span>{<span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span>}, {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>})
+<span class="hljs-comment">// -&gt; {a: 2, b: 3}</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="filterValues">filterValues ( func, object )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+func</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+object</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Returns a new object whose properties are those of the provided object
+for which a test function returns truthy. The test function is passed the
+property value, key, and the original object itself.</span>
+<p>Example:</p>
+<pre><code>fn.filterValues(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(v)</span></span>{<span class="hljs-keyword">return</span> v%<span class="hljs-number">2</span>}, {a: <span class="hljs-number">3</span>, b: <span class="hljs-number">4</span>})
+<span class="hljs-comment">// -&gt; {b: 4}</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="omit">omit ( keys, object )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+keys</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+object</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Omit a set of properties from an object. Returns a new object with all of
+the properties of the provided object, expect the specified keys.</span>
+<p>Example:</p>
+<pre><code>fn.omit([<span class="hljs-string">'a'</span>], {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>})
+<span class="hljs-comment">// -&gt; {b: 2}</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="id">id ( value )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+value</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Returns the value passed to it verbatim.</span>
+<p>Example:</p>
+<pre><code>fn.id(<span class="hljs-number">3</span>)
+<span class="hljs-comment">// -&gt; 3</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="constant">constant ( value )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+value</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Creates a function that always returns a particular value.</span>
+<p>Example:</p>
+<pre><code>three = fn.constant(<span class="hljs-number">3</span>)
+three()
+<span class="hljs-comment">// -&gt; 3</span>
+three(<span class="hljs-number">40</span>)
+<span class="hljs-comment">// -&gt; 3</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="isNumber">isNumber ( value )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+value</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Returns try if the passed argument is a number.</span>
+<p>Example:</p>
+<pre><code>fn.isNumber(<span class="hljs-number">3</span>)
+<span class="hljs-comment">// -&gt; true</span>
+fn.isNumber(<span class="hljs-string">"3"</span>)
+<span class="hljs-comment">// -&gt; false</span>
+</code></pre></section>
+
+<hr>
+<section>
+<h2 id="toArray">toArray ( collection )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+collection</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Converts an array-like object to an array. Returns a new array whose
+elements are the numeric properties of the provided collection less than
+the length property of the collection.</span>
+</section>
+
+<hr>
+<section>
+<h2 id="add">add ( left, right )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+left</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+right</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Combines arguments with the + operator.</span>
+</section>
+
+<hr>
+<section>
+<h2 id="less">less ( left, right )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+left</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+right</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Compares the arguments with the &lt; operator.</span>
+</section>
+
+<hr>
+<section>
+<h2 id="greater">greater ( left, right )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+left</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+right</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Compares the arguments with the &gt; operator.</span>
+</section>
+
+<hr>
+<section>
+<h2 id="or">or ( left, right )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+left</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+right</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Combines arguments with the || operator.</span>
+</section>
+
+<hr>
+<section>
+<h2 id="and">and ( left, right )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+left</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+right</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Combines arguments with the &amp;&amp; operator.</span>
+</section>
+
+<hr>
+<section>
+<h2 id="not">not ( value )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+value</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Negates the argument - with the - operator if the argument is a number,
+and with the ! operator otherwise.</span>
+</section>
+
+<hr>
+<section>
+<h2 id="equal">equal ( left, right )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+left</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+right</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Compares the arguments with the === operator.</span>
+</section>
+
+<hr>
+<section>
+<h2 id="random">random ( low, high )</h2>
+<h3>Paramters</h3>
+<ol>
+<li class="param">
+<span class="name">
+low</span>
+<span class="doc">
+</span>
+</li>
+<li class="param">
+<span class="name">
+high</span>
+<span class="doc">
+</span>
+</li>
+</ol>
+
+<span>Returns a number in the range [low, high).</span>
+</section>
+</article>
+</body>
+</html>
+
