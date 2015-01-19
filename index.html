@@ -1,0 +1,110 @@
+<h1 id="funfun">Funfun</h1>
+<p>I love Underscore and Lodash -- having a lot of the operations I&#39;m used to from
+functional languages like Lisp and Haskell available in JavaScript is wonderful.
+Still, they leave a lot to be desired. &#39;Wrapping&#39; objects is clunky and makes it
+difficult to mix non-Underscore functions into a chain of wrapped calls.
+Composing Underscore functions is a pain. The function interfaces contain a lot
+of magic -- magic it would be nice to leverage ourselves!</p>
+<p>Funfun is an attempt to provide functional operations like Underscore and
+Lodash, but in a way that provides easy function composition and reuse, takes
+advantage of new ES6 functionality to integration with existing types, and allow
+library users to leverage some of that &quot;magic&quot; themselves.</p>
+<h2 id="legal">Legal</h2>
+<p>Funfun, or fn.js, copyright 2015 Ray Wallace III</p>
+<p>You may use this library (and its associated documentation) under the terms of
+the MIT License. See LICENSE.</p>
+<h2 id="currying-and-composition">Currying and Composition</h2>
+<p>The biggest tools Funfun provides are automated currying and easy function
+composition. Functions have a property, <code>curry</code>, that is a auto-curried version
+of the function:</p>
+<pre><code>function add(left, right){
+    return left + right
+}
+
+[1, 2, 3].map(add.curry(1))
+// -&gt; [2, 3, 4]
+</code></pre><p>Additionally, the <code>fn</code> object can be called as a function to compose two or more
+functions:</p>
+<pre><code>function not(num){
+    return -num
+}
+
+[1, 2, 3].map(fn(not, add.curry(1)))
+// -&gt; [-2, -3, -4]
+</code></pre><p>Or, using Funfun&#39;s functions:</p>
+<pre><code>[1, 2, 3].map(fn(fn.not, fn.add(1)))
+// -&gt; [-2, -3, -4]
+</code></pre><p>Notice how <code>add.curry</code> becomes <code>fn.add</code>. All of the Funfun&#39;s functions are
+already curried -- even generated functions like the result of composition. We
+could tweak the above example like this:</p>
+<pre><code>[1, 2, 3].map(fn(fn.not, fn.add)(1))
+// -&gt; [-2, -3, -4]
+</code></pre><h2 id="leaning-on-javascript">Leaning on JavaScript</h2>
+<p>The modern JavaScript Array type has a good start on methods for working with
+them in a functional manner: map, filter, reduce, and a few others. Funfun adds
+more of what we&#39;d expect, like reject and pluck. These additions are added to
+JavaScript&#39;s built-in array type, so they can be used just like the native
+functions. The same functions are also available, in curried form, on the <code>fn</code>
+object:</p>
+<pre><code>[1, 2, 3].cons(0)
+// -&gt; [0, 1, 2, 3]
+
+[[3, 4], [4, 6], [3, 5]].map(fn.cons(2))
+// -&gt; [[2, 3, 4], [2, 4, 6], [2, 3, 5]]
+</code></pre><p>You might note, if you&#39;re used to Underscore and Lodash, that the parameter
+order for <code>cons</code> looks backward. While Underscore unwrapped functions always put
+the array (or plain object) <em>first</em>, Funfun puts them <em>last</em>. This is to make it
+simpler to use a partially applied version of a function with <code>map</code> or
+<code>forEach</code>, like you see above. Consider this Underscore example:</p>
+<pre><code>_.map(
+    [{a: 1, b: 2}, {a: 2, b: 3}],
+    _.partialRight(_.omit, [&#39;a&#39;]))
+// -&gt; [{b: 2}, {b: 3}]
+</code></pre><p>And compare it to the same thing with Funfun:</p>
+<pre><code>[{a: 1, b: 2}, {a: 2, b: 3}].map(fn.omit, [&#39;a&#39;])
+// -&gt; [{b: 2}, {b: 3}]
+</code></pre><p>Of course, we aren&#39;t always lucky with parameter order. For that, Funfun
+provides <code>flip</code>:</p>
+<pre><code>var smallPrimes = [2, 3, 5, 7, 11, 13, 17, 23, 29, 37, 41, 43]
+var integers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+integers.filter(fn.contains.flip(smallPrimes))
+// -&gt; [2, 3, 5, 7]
+</code></pre><h2 id="a-little-magic">A Little Magic</h2>
+<p>Lodash, in particular, has quite a bit of &#39;magic&#39;. For instance, it&#39;s the
+&quot;_.where style callback&quot; is quite nice, and can be used in a number of useful
+places where you might otherwise use a predicate function:</p>
+<pre><code>var objects = [{a: 1, b: 2}, {a: 2, b: 2}]
+
+_.where(objects, {a: 1})
+// -&gt; [{a: 1, b: 2}]
+_.reject(objects, {a: 1})
+// -&gt; [{a: 2, b: 2}]
+</code></pre><p>Funfun doesn&#39;t have a special object-as-predicate interpretation of arguments,
+but you can get the same effect using <code>has</code><sup id="ref1"><a
+href="#note1">1</a></sup>:</p>
+<pre><code>var objects = [{a: 1, b: 2}, {a: 2, b: 2}]
+
+fn.has({a: 1}, objects[0])
+// -&gt; true
+fn.has({a: 1}, objects[1])
+// -&gt; false
+
+objects.filter(fn.has({a: 1}))
+// -&gt; [{a: 1, b: 2}]
+
+objects.reject(fn.has({a: 1}))
+// -&gt; [{a: 2, b: 2}]
+</code></pre><p>Lodash as provides &#39;&quot;_.pluck&quot; style callbacks&#39;, which we can emulate in Funfun
+with <code>prop</code>:</p>
+<pre><code>fn.prop(&#39;a&#39;, {a: 0, b: 1})
+// -&gt; 0
+
+[{a: 1, b: 2}, {a: 0, b: 1}].filter(fn.prop(&#39;a&#39;))
+// -&gt; [{a: 1, b: 2}]
+
+[{a: 2, b: 2}, {a: 1, b: 1}].filter(fn(fn.less.flip(2), fn.prop(&#39;a&#39;)))
+// -&gt; [{a: 1, b: 1}]
+</code></pre><h2 id="endnotes">endnotes</h2>
+<p><span id="note1"><a href="#ref1">1</a></span> Both Underscore and Lodash of
+functions named <code>has</code>, but they&#39;re used different.</p>
