@@ -13,6 +13,14 @@ Lodash, but in a way that provides easy function composition and reuse, takes
 advantage of new ES6 functionality to integration with existing types, and allow
 library users to leverage some of that "magic" themselves.
 
+Legal
+--
+
+Funfun, or fn.js, copyright 2015 Ray Wallace III
+
+You may use this library (and its associated documentation) under the terms of
+the MIT License. See LICENSE.
+
 Currying and Composition
 --
 
