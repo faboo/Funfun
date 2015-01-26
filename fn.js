@@ -97,15 +97,18 @@
 			useThis = this
 
 		function curried(args){
-			var result = eval(withParameters(
-				func.length - args.length,
-				 'var newArgs = args.concat(toArray(arguments))\n'
-				+'if(newArgs.length >= func.length)\n'
-					+'return func.apply(useThis, newArgs)\n'
-				+'else\n'
-					+'return curried(newArgs)'))
+			// Use with() so the closure environment to survive minification.
+			with({func: func, useThis: useThis, args: args}){
+				var result = eval(withParameters(
+					func.length - args.length,
+					 'var newArgs = args.concat(toArray(arguments))\n'
+					+'if(newArgs.length >= func.length)\n'
+						+'return func.apply(useThis, newArgs)\n'
+					+'else\n'
+						+'return curried(newArgs)'))
 
-			return setMemo(result, 'curry', result)
+				return setMemo(result, 'curry', result)
+			}
 		}
 
 		// The fully curried version of `func`.
@@ -149,18 +152,22 @@
 	function compose(){
 		var functions = toArray(arguments)
 		var top = functions.pop()
-		var composed =
-			eval(withParameters(
-			top.length,
-			 'var result = top.apply(this, arguments)\n'
-			+'return functions.reduceRight('
-				+'function(result, func){'
-					+'return func(result)'
-				+'},'
-				+'result)'))
 
-		// A function that is the composition of the provided functions.
-		return composed.curry
+		// Use with() so the closure environment to survive minification.
+		with({functions: functions, top: top}){
+			var composed =
+				eval(withParameters(
+				top.length,
+				 'var result = top.apply(this, arguments)\n'
+				+'return functions.reduceRight('
+					+'function(result, func){'
+						+'return func(result)'
+					+'},'
+					+'result)'))
+
+			// A function that is the composition of the provided functions.
+			return composed.curry
+		}
 	}
 
 	/**
@@ -250,17 +257,20 @@
 		if(arguments.length < 2)
 			useThis = this
 
-		var result = curry(eval(withParameters(
-			func.length,
-			'return func.apply(useThis, reverse(take('+func.length+', toArray(arguments))))')))
+		// Use with() so the closure environment to survive minification.
+		with({func: func, useThis: useThis}){
+			var result = curry(eval(withParameters(
+				func.length,
+				'return func.apply(useThis, reverse(take('+func.length+', toArray(arguments))))')))
 
-		setMemo(func, 'flip', result)
-		setMemo(func, 'curry', result)
+			setMemo(func, 'flip', result)
+			setMemo(func, 'curry', result)
 
-		// A new function that, when called, calls the original function with
-		// its arguments in reverse order. When called with more arguments than
-		// the original function expects, the extra arguments are ignored.
-		return result
+			// A new function that, when called, calls the original function with
+			// its arguments in reverse order. When called with more arguments than
+			// the original function expects, the extra arguments are ignored.
+			return result
+		}
 	}
 
 	/**
@@ -284,16 +294,19 @@
 	function asNew(
 		// The constructor to use when creating an object.
 		func){
-		var constructor = eval(withParameters(
-			func.length,
-			 'var object = Object.create(func.prototype)\n'
-			+'func.apply(object, arguments)\n'
-			+'return object'))
+		// Use with() so the closure environment to survive minification.
+		with({func: func}){
+			var constructor = eval(withParameters(
+				func.length,
+				 'var object = Object.create(func.prototype)\n'
+				+'func.apply(object, arguments)\n'
+				+'return object'))
 
-		// Returns a function that, when called, creates a new object based on
-		// `func`'s prototype, and calls `func` with `this` as the new object,
-		// passing through any arguments.
-		return constructor.curry
+			// Returns a function that, when called, creates a new object based on
+			// `func`'s prototype, and calls `func` with `this` as the new object,
+			// passing through any arguments.
+			return constructor.curry
+		}
 	}
 
 	Object.defineProperties(
