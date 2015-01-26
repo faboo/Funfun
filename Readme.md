@@ -16,6 +16,12 @@ library users to leverage some of that "magic" themselves.
 Take a look at the overview below or check out the
 [API documention](http://faboo.github.io/Funfun/documention/documention.html).
 
+Download it here:
+[fn.min.js](http://faboo.github.io/Funfun/fn.min.js).
+
+Download the unminified version here:
+[fn.js](http://faboo.github.io/Funfun/fn.js).
+
 Legal
 --
 
@@ -150,5 +156,5 @@ with `prop`:
 endnotes
 --
 
-<span id="note1"><a href="#ref1">1</a></span> Both Underscore and Lodash of
-functions named `has`, but they're used different.
+<span id="note1"><a href="#ref1">1</a></span> Both Underscore and Lodash have
+functions named `has`, but they're used differently.
