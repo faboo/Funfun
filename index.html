@@ -1,9 +1,7 @@
-<html>
-<head>
+<!doctype html>
+<html><head>
 <meta charset="utf-8">
-<link rel="stylesheet" type="text/css" href="documentation/documention.css">
-<title>Funfun</title></head>
-</head>
+<link rel="stylesheet" type="text/css" href="documentation/documentation.css"><title>Readme</title></head>
 <body>
 <h1 id="funfun">Funfun</h1>
 <p>I love Underscore and Lodash -- having a lot of the operations I&#39;m used to from
@@ -17,7 +15,7 @@ Lodash, but in a way that provides easy function composition and reuse, takes
 advantage of new ES6 functionality to integration with existing types, and allow
 library users to leverage some of that &quot;magic&quot; themselves.</p>
 <p>Take a look at the overview below or check out the
-<a href="http://faboo.github.io/Funfun/documention/documention.html">API documention</a>.</p>
+<a href="http://faboo.github.io/Funfun/documention/documentation.html">API documention</a>.</p>
 <p>Download it here:
 <a href="http://faboo.github.io/Funfun/fn.min.js">fn.min.js</a>.</p>
 <p>Download the unminified version here:
@@ -30,28 +28,28 @@ the MIT License. See LICENSE.</p>
 <p>The biggest tools Funfun provides are automated currying and easy function
 composition. Functions have a property, <code>curry</code>, that is a auto-curried version
 of the function:</p>
-<pre><code>function add(left, right){
-    return left + right
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span><span class="hljs-params">(left, right)</span></span>{
+    <span class="hljs-keyword">return</span> left + right
 }
 
-[1, 2, 3].map(add.curry(1))
-// -&gt; [2, 3, 4]
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(add.curry(<span class="hljs-number">1</span>))
+<span class="hljs-comment">// -&gt; [2, 3, 4]</span>
 </code></pre><p>Additionally, the <code>fn</code> object can be called as a function to compose two or more
 functions:</p>
-<pre><code>function not(num){
-    return -num
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">not</span><span class="hljs-params">(num)</span></span>{
+    <span class="hljs-keyword">return</span> -num
 }
 
-[1, 2, 3].map(fn(not, add.curry(1)))
-// -&gt; [-2, -3, -4]
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(fn(not, add.curry(<span class="hljs-number">1</span>)))
+<span class="hljs-comment">// -&gt; [-2, -3, -4]</span>
 </code></pre><p>Or, using Funfun&#39;s functions:</p>
-<pre><code>[1, 2, 3].map(fn(fn.not, fn.add(1)))
-// -&gt; [-2, -3, -4]
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(fn(fn.not, fn.add(<span class="hljs-number">1</span>)))
+<span class="hljs-comment">// -&gt; [-2, -3, -4]</span>
 </code></pre><p>Notice how <code>add.curry</code> becomes <code>fn.add</code>. All of the Funfun&#39;s functions are
 already curried -- even generated functions like the result of composition. We
 could tweak the above example like this:</p>
-<pre><code>[1, 2, 3].map(fn(fn.not, fn.add)(1))
-// -&gt; [-2, -3, -4]
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(fn(fn.not, fn.add)(<span class="hljs-number">1</span>))
+<span class="hljs-comment">// -&gt; [-2, -3, -4]</span>
 </code></pre><h2 id="leaning-on-javascript">Leaning on JavaScript</h2>
 <p>The modern JavaScript Array type has a good start on methods for working with
 them in a functional manner: map, filter, reduce, and a few others. Funfun adds
@@ -59,68 +57,68 @@ more of what we&#39;d expect, like reject and pluck. These additions are added t
 JavaScript&#39;s built-in array type, so they can be used just like the native
 functions. The same functions are also available, in curried form, on the <code>fn</code>
 object:</p>
-<pre><code>[1, 2, 3].cons(0)
-// -&gt; [0, 1, 2, 3]
+<pre><code>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].cons(<span class="hljs-number">0</span>)
+<span class="hljs-comment">// -&gt; [0, 1, 2, 3]</span>
 
-[[3, 4], [4, 6], [3, 5]].map(fn.cons(2))
-// -&gt; [[2, 3, 4], [2, 4, 6], [2, 3, 5]]
+[[<span class="hljs-number">3</span>, <span class="hljs-number">4</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">6</span>], [<span class="hljs-number">3</span>, <span class="hljs-number">5</span>]].map(fn.cons(<span class="hljs-number">2</span>))
+<span class="hljs-comment">// -&gt; [[2, 3, 4], [2, 4, 6], [2, 3, 5]]</span>
 </code></pre><p>You might note, if you&#39;re used to Underscore and Lodash, that the parameter
 order for <code>cons</code> looks backward. While Underscore unwrapped functions always put
 the array (or plain object) <em>first</em>, Funfun puts them <em>last</em>. This is to make it
 simpler to use a partially applied version of a function with <code>map</code> or
 <code>forEach</code>, like you see above. Consider this Underscore example:</p>
 <pre><code>_.map(
-    [{a: 1, b: 2}, {a: 2, b: 3}],
-    _.partialRight(_.omit, [&#39;a&#39;]))
-// -&gt; [{b: 2}, {b: 3}]
+    [{a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">2</span>, b: <span class="hljs-number">3</span>}],
+    _.partialRight(_.omit, [<span class="hljs-string">'a'</span>]))
+<span class="hljs-comment">// -&gt; [{b: 2}, {b: 3}]</span>
 </code></pre><p>And compare it to the same thing with Funfun:</p>
-<pre><code>[{a: 1, b: 2}, {a: 2, b: 3}].map(fn.omit, [&#39;a&#39;])
-// -&gt; [{b: 2}, {b: 3}]
+<pre><code>[{a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">2</span>, b: <span class="hljs-number">3</span>}].map(fn.omit, [<span class="hljs-string">'a'</span>])
+<span class="hljs-comment">// -&gt; [{b: 2}, {b: 3}]</span>
 </code></pre><p>Of course, we aren&#39;t always lucky with parameter order. For that, Funfun
 provides <code>flip</code>:</p>
-<pre><code>var smallPrimes = [2, 3, 5, 7, 11, 13, 17, 23, 29, 37, 41, 43]
-var integers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+<pre><code><span class="hljs-keyword">var</span> smallPrimes = [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">11</span>, <span class="hljs-number">13</span>, <span class="hljs-number">17</span>, <span class="hljs-number">23</span>, <span class="hljs-number">29</span>, <span class="hljs-number">37</span>, <span class="hljs-number">41</span>, <span class="hljs-number">43</span>]
+<span class="hljs-keyword">var</span> integers = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>]
 
 integers.filter(fn.contains.flip(smallPrimes))
-// -&gt; [2, 3, 5, 7]
+<span class="hljs-comment">// -&gt; [2, 3, 5, 7]</span>
 </code></pre><h2 id="a-little-magic">A Little Magic</h2>
 <p>Lodash, in particular, has quite a bit of &#39;magic&#39;. For instance, it&#39;s the
 &quot;_.where style callback&quot; is quite nice, and can be used in a number of useful
 places where you might otherwise use a predicate function:</p>
-<pre><code>var objects = [{a: 1, b: 2}, {a: 2, b: 2}]
+<pre><code><span class="hljs-keyword">var</span> objects = [{a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">2</span>, b: <span class="hljs-number">2</span>}]
 
-_.where(objects, {a: 1})
-// -&gt; [{a: 1, b: 2}]
-_.reject(objects, {a: 1})
-// -&gt; [{a: 2, b: 2}]
+_.where(objects, {a: <span class="hljs-number">1</span>})
+<span class="hljs-comment">// -&gt; [{a: 1, b: 2}]</span>
+_.reject(objects, {a: <span class="hljs-number">1</span>})
+<span class="hljs-comment">// -&gt; [{a: 2, b: 2}]</span>
 </code></pre><p>Funfun doesn&#39;t have a special object-as-predicate interpretation of arguments,
 but you can get the same effect using <code>has</code><sup id="ref1"><a
 href="#note1">1</a></sup>:</p>
-<pre><code>var objects = [{a: 1, b: 2}, {a: 2, b: 2}]
+<pre><code><span class="hljs-keyword">var</span> objects = [{a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">2</span>, b: <span class="hljs-number">2</span>}]
 
-fn.has({a: 1}, objects[0])
-// -&gt; true
-fn.has({a: 1}, objects[1])
-// -&gt; false
+fn.has({a: <span class="hljs-number">1</span>}, objects[<span class="hljs-number">0</span>])
+<span class="hljs-comment">// -&gt; true</span>
+fn.has({a: <span class="hljs-number">1</span>}, objects[<span class="hljs-number">1</span>])
+<span class="hljs-comment">// -&gt; false</span>
 
-objects.filter(fn.has({a: 1}))
-// -&gt; [{a: 1, b: 2}]
+objects.filter(fn.has({a: <span class="hljs-number">1</span>}))
+<span class="hljs-comment">// -&gt; [{a: 1, b: 2}]</span>
 
-objects.reject(fn.has({a: 1}))
-// -&gt; [{a: 2, b: 2}]
+objects.reject(fn.has({a: <span class="hljs-number">1</span>}))
+<span class="hljs-comment">// -&gt; [{a: 2, b: 2}]</span>
 </code></pre><p>Lodash as provides &#39;&quot;_.pluck&quot; style callbacks&#39;, which we can emulate in Funfun
 with <code>prop</code>:</p>
-<pre><code>fn.prop(&#39;a&#39;, {a: 0, b: 1})
-// -&gt; 0
+<pre><code>fn.prop(<span class="hljs-string">'a'</span>, {a: <span class="hljs-number">0</span>, b: <span class="hljs-number">1</span>})
+<span class="hljs-comment">// -&gt; 0</span>
 
-[{a: 1, b: 2}, {a: 0, b: 1}].filter(fn.prop(&#39;a&#39;))
-// -&gt; [{a: 1, b: 2}]
+[{a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">0</span>, b: <span class="hljs-number">1</span>}].filter(fn.prop(<span class="hljs-string">'a'</span>))
+<span class="hljs-comment">// -&gt; [{a: 1, b: 2}]</span>
 
-[{a: 2, b: 2}, {a: 1, b: 1}].filter(fn(fn.less.flip(2), fn.prop(&#39;a&#39;)))
-// -&gt; [{a: 1, b: 1}]
+[{a: <span class="hljs-number">2</span>, b: <span class="hljs-number">2</span>}, {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">1</span>}].filter(fn(fn.less.flip(<span class="hljs-number">2</span>), fn.prop(<span class="hljs-string">'a'</span>)))
+<span class="hljs-comment">// -&gt; [{a: 1, b: 1}]</span>
 </code></pre><h2 id="endnotes">endnotes</h2>
 <p><span id="note1"><a href="#ref1">1</a></span> Both Underscore and Lodash have
 functions named <code>has</code>, but they&#39;re used differently.</p>
-
 </body>
-<html>
+</html>
+

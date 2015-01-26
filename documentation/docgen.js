@@ -5,9 +5,10 @@ parser = require('./docparse')
 fn = require('../fn')
 
 marked.setOptions({
-  highlight: function (code) {
-    return require('highlight.js').highlight('javascript', code).value;
-  }
+	gfm: true,
+	highlight: function (code) {
+		return require('highlight.js').highlight('javascript', code).value;
+	}
 });
 
 function parse(file, arg, cssFile){
@@ -32,6 +33,15 @@ function parse(file, arg, cssFile){
 			else
 				throw ex
 		}
+	})
+}
+
+function processMarkdown(file, arg, cssFile){
+	fs.readFile(file, function(err, content){
+		var text = content.toString()
+		var result = html(file.replace(/\.md$/, '').replace(/^.*\//, ''), marked(text), cssFile)
+
+		console.log(result)
 	})
 }
 
@@ -185,13 +195,27 @@ function htmlNav(info){
 	return nav(navs.join('\n'))
 }
 
+function html(title, body, cssFile){
+	return '<!doctype html>\n<html>'
+		+ '<head>\n'
+		+ '<meta charset="utf-8">\n'
+		+ (cssFile? '<link rel="stylesheet" type="text/css" href="'+cssFile+'">' : '')
+		+ '<title>'+title+'</title>'
+		+ '</head>\n'
+		+ '<body>\n'
+		+ body
+		+ '</body>\n'
+		+ '</html>\n'
+}
+
 function toHtml(file, cssFile, info){
 	var body = article(h(1, file)
 		+ htmlDoc(cleanComment(info.intro))
 		+ info.funcs.filter(fn.prop('name')).map(htmlFunc).join('\n<hr>\n'))
 	var nav = htmlNav(info)
 
-
+	return html(file+' Documentation', cssFile, nav+body)
+/*
 	return '<!doctype html>\n<html>'
 		+ '<head>\n'
 		+ '<meta charset="utf-8">\n'
@@ -203,9 +227,18 @@ function toHtml(file, cssFile, info){
 		+ body
 		+ '</body>\n'
 		+ '</html>\n'
+		*/
 }
 
-parse(
-	process.argv[2],
-	process.argv.last(),
-	process.argv[3] && process.argv[3].match(/\.css$/)? process.argv[3] : undefined)
+if(process.argv[2].match(/\.js$/))
+	parse(
+		process.argv[2],
+		process.argv.last(),
+		process.argv[3] && process.argv[3].match(/\.css$/)? process.argv[3] : undefined)
+else if(process.argv[2].match(/\.md$/))
+	processMarkdown(
+		process.argv[2],
+		process.argv.last(),
+		process.argv[3] && process.argv[3].match(/\.css$/)? process.argv[3] : undefined)
+else
+	console.log("Unrecognized file: "+process.argv[2])
