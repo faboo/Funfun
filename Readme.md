@@ -14,7 +14,7 @@ advantage of new ES6 functionality to integration with existing types, and allow
 library users to leverage some of that "magic" themselves.
 
 Take a look at the overview below or check out the
-[API documention](http://faboo.github.io/Funfun/documention/documentation.html).
+[API documentation](http://faboo.github.io/Funfun/documentation/documentation.html).
 
 Download it here:
 [fn.min.js](http://faboo.github.io/Funfun/fn.min.js).
